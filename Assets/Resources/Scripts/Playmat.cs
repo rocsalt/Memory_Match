@@ -28,7 +28,7 @@ public class Playmat : MonoBehaviour
     {
         foreach(Slot slot in layout.slots)
         {
-            GameObject go = Instantiate(cardPrefab, slot.transform.position, Quaternion.Euler(180, 270, 270)) as GameObject;
+            GameObject go = Instantiate(cardPrefab, slot.transform.position, Quaternion.Euler(0, 270, 270)) as GameObject;
             go.transform.parent = slot.transform;
             Destroy(slot.GetComponent<BoxCollider>());
             cards.Add(go.GetComponent<CardGG>());
@@ -37,10 +37,10 @@ public class Playmat : MonoBehaviour
 
     void CreateCardTypes()
     {
-        for (int i = 0; i < cards.Count / 2; i++)
+        for (int i = 0; i <= cards.Count / 2; i++)
         {
             CardGG c1 = cards[i];
-            CardGG c2 = cards[cards.Count / 2 - 1 - i];
+            CardGG c2 = cards[cards.Count - 1 - i]; // todo Put in true randomization, this only makes the last one the same as the first one and moves inward
             string type = GameSettings.Instance().GetRandomType();
             c1.GenerateCard(type);
             c2.GenerateCard(type);

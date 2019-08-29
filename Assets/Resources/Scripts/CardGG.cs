@@ -2,31 +2,40 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardGG : MonoBehaviour
+public class CardGG : VersionedView
 {
-    public string cardType;
+    public enum CardState { Flipped, Hidden }
+    public CardState state = CardState.Hidden;
 
-    // Start is called before the first frame update
-    void Start()
+    public GameObject cardView;
+    public string cardType;
+    public float delay = 0.5f;
+
+    public override void DirtyUpdate()
     {
-        
+        base.DirtyUpdate();
+        StartCoroutine(StartCardFlip());
     }
 
-    // Update is called once per frame
-    void Update()
+    public IEnumerator StartCardFlip()
     {
-        
+        cardView.GetComponent<Animation>().Play();
+        yield return new WaitForSeconds(delay);
     }
 
     public void GenerateCard(string type)
     {
         cardType = type;
-        Renderer renderer = GetComponent<Renderer>();
+        Renderer renderer = cardView.GetComponent<Renderer>();
         renderer.material.mainTexture = Resources.Load("Graphics/" + cardType) as Texture2D;
     }
 
     private void OnMouseDown()
     {
-        print("I'm Clicked");
+        if (state == CardState.Hidden)
+        {
+            state = CardState.Flipped;
+            MarkDirty();
+        }
     }
 }
