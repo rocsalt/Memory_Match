@@ -24,4 +24,9 @@ public class CardGG : MonoBehaviour
         Renderer renderer = GetComponent<Renderer>();
         renderer.material.mainTexture = Resources.Load("Graphics/" + cardType) as Texture2D;
     }
+
+    private void OnMouseDown()
+    {
+        print("I'm Clicked");
+    }
 }

@@ -30,7 +30,7 @@ public class Playmat : MonoBehaviour
         {
             GameObject go = Instantiate(cardPrefab, slot.transform.position, Quaternion.Euler(180, 270, 270)) as GameObject;
             go.transform.parent = slot.transform;
-
+            Destroy(slot.GetComponent<BoxCollider>());
             cards.Add(go.GetComponent<CardGG>());
         }
     }
