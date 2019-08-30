@@ -13,14 +13,47 @@ public class CardGG : VersionedView
 
     public override void DirtyUpdate()
     {
-        base.DirtyUpdate();
         StartCoroutine(StartCardFlip());
     }
 
+
+    //public Animation anim;
+
+    //private void LateUpdate()
+    //{
+    //    anim = GetComponent<Animation>();
+    //    foreach (AnimationState state in anim)
+    //    {
+    //        state.speed = 4f;
+    //        print(state.speed);
+    //    }
+
+    //}
+
+
+
     public IEnumerator StartCardFlip()
     {
+        AnimationClip animationClip;
+        animationClip = cardView.GetComponent<Animation>().clip; // refer to pt 10 8:52 if this doesn't work...
+        print(animationClip.name);
+        if (state == CardState.Flipped)
+        {
+            print("~1~");
+            print( cardView.GetComponent<Animation>().GetClip("CardFlip"));
+        }
+        else
+        {
+            print("~2~");
+            cardView.GetComponent<AnimationState>().speed = -1f;
+        }
+
         cardView.GetComponent<Animation>().Play();
-        yield return new WaitForSeconds(delay);
+        yield return new WaitForSeconds(animationClip.length + delay);
+        if (state == CardState.Flipped)
+        {
+            Playmat.GetPlaymat().SetCardsForMatch(this);
+        }
     }
 
     public void GenerateCard(string type)
@@ -28,6 +61,12 @@ public class CardGG : VersionedView
         cardType = type;
         Renderer renderer = cardView.GetComponent<Renderer>();
         renderer.material.mainTexture = Resources.Load("Graphics/" + cardType) as Texture2D;
+    }
+
+    public void Unflip()
+    {
+        state = CardState.Hidden;
+        MarkDirty();
     }
 
     private void OnMouseDown()

@@ -27,5 +27,6 @@ public class VersionedView : MonoBehaviour, IVersioned
     public void MarkDirty()
     {
         Version++;
+        print(Version);
     }
 }

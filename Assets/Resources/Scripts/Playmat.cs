@@ -1,22 +1,36 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Playmat : MonoBehaviour
+public class Playmat : VersionedView
 {
+    public enum BoardState { Flipping, Comparing }
+    public BoardState state = BoardState.Flipping;
+
     [SerializeField] GameObject cardPrefab;
+    private static Playmat playmat;
     public Layout layout;
     public GameObject board;
+
+    public CardGG card1;
+    public CardGG card2;
 
     public List<CardGG> cards = new List<CardGG>();
 
     // Start is called before the first frame update
     void Start()
     {
+        playmat = this;
         GameSettings.Instance().SetDifficulty(GameSettings.GameDifficulty.Medium);
         CreateLayout();
         CreateCardsFromLayout();
         CreateCardTypes();
+    }
+
+    public static Playmat GetPlaymat()
+    {
+        return playmat;
     }
 
     void CreateLayout()
@@ -46,10 +60,45 @@ public class Playmat : MonoBehaviour
             c2.GenerateCard(type);
         }
     }
-
-    // Update is called once per frame
-    void Update()
+    public override void DirtyUpdate()
     {
-        
+        switch (state)
+        {
+            case BoardState.Comparing:
+                Compare();
+                break;
+        }
+    }
+
+    private void Compare()
+    {
+        if (card1.cardType == card2.cardType)
+        {
+            print("We got a match");
+        }
+        else
+        {
+            card1.Unflip();
+            card2.Unflip();
+        }
+
+        card1 = null;
+        card2 = null;
+        state = BoardState.Flipping;
+    }
+
+    public void SetCardsForMatch(CardGG card)
+    {
+        if (card1 == null)
+        {
+            card1 = card;
+            state = BoardState.Flipping;
+        }
+        else
+        {
+            card2 = card;
+            state = BoardState.Comparing;
+        }
+        MarkDirty();
     }
 }
