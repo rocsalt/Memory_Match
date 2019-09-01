@@ -5,8 +5,8 @@ using UnityEngine;
 public class VersionedView : MonoBehaviour, IVersioned
 {
     ulong cachedVerion = 0;
-    ulong version = 0;
 
+    public ulong Version { get; set; } = 0;
 
     protected virtual void Update()
     {
@@ -16,8 +16,6 @@ public class VersionedView : MonoBehaviour, IVersioned
             DirtyUpdate();
         }
     }
-
-    public ulong Version { get => version; set => version = value; } // see pt9 7:26 for original if this shorthand doesn't work
 
     public virtual void DirtyUpdate()
     {

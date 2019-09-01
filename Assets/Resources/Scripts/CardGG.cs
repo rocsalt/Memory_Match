@@ -11,45 +11,34 @@ public class CardGG : VersionedView
     public string cardType;
     public float delay = 0.5f;
 
+    Animation anim;
+    AnimationState clip;
+
+    private void Start()
+    {
+        anim = cardView.GetComponent<Animation>();
+        clip = anim["CardFlip"];
+    }
+
     public override void DirtyUpdate()
     {
         StartCoroutine(StartCardFlip());
     }
 
-
-    //public Animation anim;
-
-    //private void LateUpdate()
-    //{
-    //    anim = GetComponent<Animation>();
-    //    foreach (AnimationState state in anim)
-    //    {
-    //        state.speed = 4f;
-    //        print(state.speed);
-    //    }
-
-    //}
-
-
-
     public IEnumerator StartCardFlip()
     {
-        AnimationClip animationClip;
-        animationClip = cardView.GetComponent<Animation>().clip; // refer to pt 10 8:52 if this doesn't work...
-        print(animationClip.name);
         if (state == CardState.Flipped)
         {
-            print("~1~");
-            print( cardView.GetComponent<Animation>().GetClip("CardFlip"));
+            clip.speed = 1f;
         }
         else
         {
-            print("~2~");
-            cardView.GetComponent<AnimationState>().speed = -1f;
+            clip.speed = -1f;
+            clip.time = clip.length;
         }
 
-        cardView.GetComponent<Animation>().Play();
-        yield return new WaitForSeconds(animationClip.length + delay);
+        anim.Play();
+        yield return new WaitForSeconds(clip.length + delay);
         if (state == CardState.Flipped)
         {
             Playmat.GetPlaymat().SetCardsForMatch(this);

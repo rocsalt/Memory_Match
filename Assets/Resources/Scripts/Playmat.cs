@@ -42,7 +42,7 @@ public class Playmat : VersionedView
     {
         foreach(Slot slot in layout.slots)
         {
-            GameObject go = Instantiate(cardPrefab, slot.transform.position, Quaternion.Euler(0, 270, 270)) as GameObject;
+            GameObject go = Instantiate(cardPrefab, slot.transform.position, Quaternion.Euler(0, -90, -90)) as GameObject;
             go.transform.parent = slot.transform;
             Destroy(slot.GetComponent<BoxCollider>());
             cards.Add(go.GetComponent<CardGG>());
