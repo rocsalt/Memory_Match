@@ -19,7 +19,7 @@ public class GameSettings
     }
 
     public enum GameDifficulty { Easy, Medium, Hard }
-    private GameDifficulty difficulty = GameDifficulty.Easy;
+    public GameDifficulty difficulty = GameDifficulty.Easy;
     private string[] easyDifficulty = { "Blue", "Gold", "Green" };
     private string[] mediumDifficulty = { "Blue", "Gold", "Green", "Pink", "Purple" };
     private string[] hardDifficulty = { "Blue", "Gold", "Green", "Pink", "Purple", "Red", "Teal" };

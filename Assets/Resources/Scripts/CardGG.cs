@@ -43,6 +43,10 @@ public class CardGG : VersionedView
         {
             Playmat.GetPlaymat().SetCardsForMatch(this);
         }
+        else
+        {
+            Playmat.GetPlaymat().numberOfCardsFlipped--;
+        }
     }
 
     public void GenerateCard(string type)
@@ -60,8 +64,9 @@ public class CardGG : VersionedView
 
     private void OnMouseDown()
     {
-        if (state == CardState.Hidden)
+        if (state == CardState.Hidden && Playmat.GetPlaymat().numberOfCardsFlipped !=2)
         {
+            Playmat.GetPlaymat().numberOfCardsFlipped++;
             state = CardState.Flipped;
             MarkDirty();
         }

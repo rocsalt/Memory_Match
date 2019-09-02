@@ -5,6 +5,11 @@ using UnityEngine;
 
 public class Playmat : VersionedView
 {
+    public bool gameWon = false;
+    public int totalPoints = 0;
+    public int points = 0;
+    public int numberOfCardsFlipped = 0;
+
     public enum BoardState { Flipping, Comparing }
     public BoardState state = BoardState.Flipping;
 
@@ -22,10 +27,7 @@ public class Playmat : VersionedView
     void Start()
     {
         playmat = this;
-        GameSettings.Instance().SetDifficulty(GameSettings.GameDifficulty.Medium);
-        CreateLayout();
-        CreateCardsFromLayout();
-        CreateCardTypes();
+        //GameSettings.Instance().SetDifficulty(GameSettings.GameDifficulty.Medium);
     }
 
     public static Playmat GetPlaymat()
@@ -33,9 +35,19 @@ public class Playmat : VersionedView
         return playmat;
     }
 
-    void CreateLayout()
+    public void CreateLayout(string levelName)
     {
-        board = layout.GetRandomLayout();
+        if (levelName == "Random")
+        {
+            board = layout.GetRandomLayout();
+        }
+        else
+        {
+            board = layout.GetLayoutFromName(levelName);
+        }
+        board.transform.parent = gameObject.transform;
+        CreateCardsFromLayout();
+        CreateCardTypes();
     }
 
     void CreateCardsFromLayout()
@@ -59,7 +71,14 @@ public class Playmat : VersionedView
             c1.GenerateCard(type);
             c2.GenerateCard(type);
         }
+        totalPoints = cards.Count / 2;
     }
+
+    public string GetPointsString()
+    {
+        return points.ToString() + "/" + totalPoints.ToString();
+    }
+
     public override void DirtyUpdate()
     {
         switch (state)
@@ -74,7 +93,12 @@ public class Playmat : VersionedView
     {
         if (card1.cardType == card2.cardType)
         {
-            print("We got a match");
+            numberOfCardsFlipped = 0;
+            points++;
+            if (totalPoints == points)
+            {
+                gameWon = true;
+            }
         }
         else
         {
